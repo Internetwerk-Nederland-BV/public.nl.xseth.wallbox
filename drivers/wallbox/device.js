@@ -49,62 +49,78 @@ class wallbox_charger extends Homey.Device {
     /**
      * Polling function for retrieving/parsing current status charger
      */
-    let stats;
+     const stats = await this.retrieveChargerStats();
 
+     if(stats !== undefined) {
+       await this.checkDeviceAvailability(stats);
+       await this.whenChangedSetAndTriggerStatus(stats);
+       await this.whenChangedSetCapabilities(stats);
+     }
+   }
+
+   async retrieveChargerStats() {
     try {
-      stats = await this._api.getChargerStatus(this._id);
+      let stats = await this._api.getChargerStatus(this._id);
+      return stats;
     } catch (error) {
       this.log(`Failed to get ChargerStatus: ${error}`)
       this.setUnavailable();
       return
     }
+  }
 
-    // Parse current status
-    const statusId = stats['status_id']
-    const status = status_util.getStatus(statusId)
-    const curStatus = this.getCapabilityValue('status')
-    
-    // Parse locked capability
-    let isLocked = Boolean(stats['config_data']['locked']);
-    if (this.getCapabilityValue('locked') !== isLocked) {
-      this.log(`Setting [locked]: ${isLocked}`);
-      this.setCapabilityValue('locked', isLocked);
-    }
-
-    // Parse on/off-pause/resume capability
-    const isOnOff = status != 'Paused';
-    if (this.getCapabilityValue('onoff') !== isOnOff) {
-      this.log(`Setting [onoff]: ${isOnOff}`);
-      this.setCapabilityValue('onoff', isOnOff);
-    }
-
-    // Ensure availability is correct
-    if (status == 'Disconnected' || status == 'Error') {
+  async checkDeviceAvailability(stats) {
+    const newStatus = this.getChargerStatusName(stats);
+    if (newStatus == 'Disconnected' || newStatus == 'Error') {
       await this.setUnavailable();
       this.log(`Device ${this._name} is unavailable (disconnected/error)`)
       return
     } else 
-      await this.setAvailable();
+    return await this.setAvailable();
+  }
 
-    if (curStatus !== status) {
-      this.log('Setting [status]: ', status);
-      this.setCapabilityValue('status', status);
+  async whenChangedSetAndTriggerStatus(stats) {
+    const oldStatus = this.getCapabilityValue('status');
+    const newStatus = this.getChargerStatusName(stats);
+    if (oldStatus !== newStatus) {
+      this.log('Setting [status]: ', newStatus);
+      this.setCapabilityValue('status', newStatus);
 
-      this.triggerStatusChange(curStatus, status);
+      this.triggerStatusChange(oldStatus, newStatus);
     }
+  }
 
-    // Set power measurements
-    const amps = stats['config_data']['max_charging_current'];
-    const kw = stats['charging_power'];
-    const watts = kw * 1000; // KiloWatt = Watt / 1000
+  async whenChangedSetCapabilities(stats) {
+    let isLocked = Boolean(stats['config_data']['locked']);
+    const lockedStatus = this.getCapabilityValue('locked');
+    await this.whenChangedSetCapabilityValue(isLocked, lockedStatus);
 
-    if (status === 'Charging'){
-      const kwhs = stats['added_energy'];
-      this.setCapabilityValue('meter_power', kwhs);
+    const newStatus = this.getChargerStatusName(stats);
+    const isOnOff = newStatus != 'Paused';
+    const onOffStatus = this.getCapabilityValue('onoff');
+    await this.whenChangedSetCapabilityValue(isOnOff, onOffStatus);
+
+    const chargingPowerInKW = stats['charging_power'];
+    const chargingPowerInW = chargingPowerInKW * 1000;
+    await this.whenChangedSetCapabilityValue('measure_power', chargingPowerInW);
+
+    const sessionEnergySupplied = stats['added_energy'];     
+    await this.whenChangedSetCapabilityValue('meter_power', sessionEnergySupplied);
+
+    const maxChargingCurrent = stats['config_data']['max_charging_current'];
+    await this.whenChangedSetCapabilityValue('measure_current', maxChargingCurrent);
+  }
+
+  getChargerStatusName(stats) {
+    let statusId = stats['status_id'];
+    return status_util.getStatus(statusId);
+  }
+
+  async whenChangedSetCapabilityValue(capabilityName, currentCapabilityValue) {
+    const oldCapabilityValue = this.getCapabilityValue(capabilityName);
+    if (currentCapabilityValue !== oldCapabilityValue) {
+        await this.setCapabilityValue(capabilityName, currentCapabilityValue);    
     }
-
-    this.setCapabilityValue('measure_current', amps);
-    this.setCapabilityValue('measure_power', watts);
   }
 
   async triggerStatusChange(curStatus, newStatus){
@@ -170,7 +186,7 @@ class wallbox_charger extends Homey.Device {
     await func;
   }
 
-  async setAmpere(amperage) {
+  async setMaxChargingCurrent(amperage) {
     /**
      * Change ampere value for charging session
      *
