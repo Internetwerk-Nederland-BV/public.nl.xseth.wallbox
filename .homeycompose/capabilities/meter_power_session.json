@@ -1,0 +1,17 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Session Energy Supplied",
+      "nl": "Sessie Energie Geleverd",
+      "fr": "Énergie de Séance Fournie"
+    },
+    "getable": true,
+    "setable": false,
+    "units": {
+      "en": "kWh"
+    },
+    "decimals": 3,
+    "icon": "/assets/meter_power.svg",
+    "insights": true
+  }
+  

@@ -1,0 +1,18 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Maximum Charging Current",
+      "nl": "Maximale Laadstroom",
+      "fr": "Courant de Charge Maximal"
+    },
+    "getable": true,
+    "setable": false,
+    "units": {
+      "en": "A"
+    },
+    "min": 6,
+    "max": 32,
+    "icon": "/assets/measure_power.svg",
+    "insights": true
+  }
+  

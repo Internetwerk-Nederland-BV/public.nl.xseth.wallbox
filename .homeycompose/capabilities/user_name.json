@@ -1,0 +1,11 @@
+{
+    "type": "string",
+    "title": {
+      "en": "User Name",
+      "nl": "Gebruikersnaam",
+      "fr": "Nom d'Utilisateur"
+    },
+    "getable": true,
+    "setable": false,
+    "icon": "/assets/user.svg"
+  }

@@ -1,0 +1,12 @@
+{
+    "type": "string",
+    "title": {
+      "en": "UserID",
+      "nl": "UserID",
+      "fr": "ID de l'Utilisateur"
+    },
+    "getable": true,
+    "setable": false,
+    "uiComponent": null,
+    "icon": "/assets/user.svg"
+  }

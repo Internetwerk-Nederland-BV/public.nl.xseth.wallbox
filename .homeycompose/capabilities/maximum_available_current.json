@@ -1,0 +1,18 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Maximum Available Current",
+      "nl": "Maximaal Beschikbare Stroom",
+      "fr": "Courant Maximum Disponible"
+    },
+    "getable": true,
+    "setable": false,
+    "units": {
+      "en": "A"
+    },
+    "min": 6,
+    "max": 32,
+    "icon": "/assets/measure_power.svg",
+    "insights": true
+  }
+  

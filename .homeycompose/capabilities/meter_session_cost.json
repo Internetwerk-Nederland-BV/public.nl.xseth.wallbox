@@ -1,0 +1,17 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Session Cost",
+      "nl": "Sessiekosten",
+      "fr": "Coût de la Séance"
+    },
+    "getable": true,
+    "setable": false,
+    "units": {
+      "en": "€"
+    },
+    "decimals": 2,
+    "icon": "/assets/euro.svg",
+    "insights": true
+  }
+  

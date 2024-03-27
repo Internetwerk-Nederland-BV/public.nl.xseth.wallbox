@@ -1,0 +1,16 @@
+{
+    "type": "number",
+    "title": {
+      "en": "Energy Cost",
+      "nl": "Energiekosten",
+      "fr": "Coût d'Énergie"
+    },
+    "getable": true,
+    "setable": false,
+    "units": {
+      "en": "€/kWh"
+    },
+    "decimals": 2,
+    "icon": "/assets/euro.svg",
+    "insights": true
+  }
