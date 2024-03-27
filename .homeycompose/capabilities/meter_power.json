@@ -1,15 +1,16 @@
 {
   "type": "number",
   "title": {
-    "en": "Power supplied in this session",
-    "nl": "Vermogen in deze laadsessie geleverd",
-    "fr": "Puissance fournie lors de cette session"
+    "en": "Total Energy Supplied",
+    "nl": "Totaal Geleverde Energie",
+    "fr": "Énergie Totale Fournie"
   },
   "getable": true,
   "setable": false,
   "units": {
     "en": "kWh"
   },
-  "icon": "/assets/icon.svg",
+  "decimals": 3,
+  "icon": "/assets/meter_power.svg",
   "insights": true
 }

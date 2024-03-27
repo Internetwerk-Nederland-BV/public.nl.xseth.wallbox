@@ -9,9 +9,15 @@
     "locked",
     "status",
     "onoff",
+    "measure_power",
+    "measure_maximum_charging_current",
+    "meter_power_session",
     "meter_power",
-    "measure_current",
-    "measure_power"
+    "user_id",
+    "user_name",
+    "maximum_available_current",
+    "measure_energy_cost",
+    "meter_session_cost"
   ],
   "images": {
     "xlarge": "/drivers/wallbox/assets/images/xlarge.png",

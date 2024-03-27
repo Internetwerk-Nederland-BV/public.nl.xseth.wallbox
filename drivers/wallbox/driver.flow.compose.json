@@ -37,11 +37,25 @@
       "title": {
         "en": "Status changed",
         "nl": "Status gewijzigd",
-        "fr": "statut à changé"
+        "fr": "Statut à changé"
       },
       "tokens": [
         {
-          "name" : "status",
+          "name": "oldStatus",
+          "type": "string",
+          "title": {
+            "en": "Old Status",
+            "nl": "Oude Status",
+            "fr": "Ancien Statut"
+          },
+          "example": {
+            "en": "Waiting",
+            "nl": "Waiting",
+            "fr": "En attente"
+          }
+        },
+        {
+          "name": "status",
           "type": "string",
           "title": {
             "en": "Status",
@@ -55,6 +69,62 @@
           }
         }
       ]
+    },
+    {
+      "id": "meter_power_changed",
+      "title": {
+        "en": "Total energy supplied changed",
+        "nl": "Totaal geleverde energie gewijzigd",
+        "fr": "Énergie totale fournie modifiée"
+      }
+    },
+    {
+      "id": "meter_power_session_changed",
+      "title": {
+        "en": "Session energy supplied changed",
+        "nl": "Sessie energie geleverd gewijzigd",
+        "fr": "Énergie de Séance fournie modifié"
+      }
+    },
+    {
+      "id": "measure_energy_cost_changed",
+      "title": {
+        "en": "Energy cost changed",
+        "nl": "Energiekosten gewijzigd",
+        "fr": "Coût d'énergie modifié"
+      }
+    },
+    {
+      "id": "meter_session_cost_changed",
+      "title": {
+        "en": "Session cost changed",
+        "nl": "Sessiekosten gewijzigd",
+        "fr": "Coût de la Séance modifié"
+      }
+    },
+    {
+      "id": "measure_maximum_charging_current_changed",
+      "title": {
+        "en": "Maximum charging current changed",
+        "nl": "Maximale laadstroom gewijzigd",
+        "fr": "Courant de charge maximum modifié"
+      }
+    },
+    {
+      "id": "user_id_changed",
+      "title": {
+        "en": "UserID changed",
+        "nl": "UserID gewijzigd",
+        "fr": "ID de l'Utilisateur modifié"
+      }
+    },
+    {
+      "id": "user_name_changed",
+      "title": {
+        "en": "User name changed",
+        "nl": "Gebruikersnaam gewijzigd",
+        "fr": "Nom d'utilisateur modifié"
+      }
     }
   ],
   "conditions": [
@@ -77,34 +147,63 @@
       }
     },
     {
-      "id": "change_ampere",
+      "id": "change_measure_maximum_charging_current",
       "title": {
-        "en": "Change charging current",
-        "nl": "Verander laadsnelheid",
-        "fr": "Modifier la vitesse de chargement"
+        "en": "Change measure maximum charging current",
+        "nl": "Verander meting maximale laadstroom",
+        "fr": "Modifier la mesure du courant de charge maximum"
       },
       "titleFormatted": {
-        "en": "Set charging to current: [[ampere]]",
-        "nl": "Stel laden in met ampere: [[ampere]]",
-        "fr": "Configurer la charge avec Ampère: [[ampere]]"
+        "en": "Set maximum charging current to: [[ampere]]A",
+        "nl": "Stel maximale laadstroom in op: [[ampere]]A",
+        "fr": "Réglez le courant de charge maximum sur: [[ampere]]A"
       },
       "hint": {
-        "en": "Change current",
-        "nl": "Verander laadsnelheid",
-        "fr": "Modifier la vitesse de chargement"
+        "en": "Change maximum charging current",
+        "nl": "Wijzig maximale laadstroom",
+        "fr": "Modifier le courant de charge maximum"
       },
       "args": [
         {
           "name": "ampere",
           "type": "number",
           "placeholder": {
-            "en": "Current",
-            "nl": "Ampere",
-            "fr": "Ampère"
+            "en": "Charging current",
+            "nl": "Laadstroom",
+            "fr": "Courant de charge"
           },
-          "min": 1,
+          "min": 6,
           "max": 32,
           "step": 1
+        }
+      ]
+    },
+    {
+      "id": "change_measure_energy_cost",
+      "title": {
+        "en": "Change measure energy cost",
+        "nl": "Wijzig meting energiekosten",
+        "fr": "Modifiér mesure du Coût d'énergie"
+      },
+      "titleFormatted": {
+        "en": "Set energy cost to: [[energyCost]]€/kWh",
+        "nl": "Stel energiekosten in op: [[energyCost]]€/kWh",
+        "fr": "Fixez le coût de l'énergie à: [[energyCost]]€/kWh"
+      },
+      "hint": {
+        "en": "Energy cost",
+        "nl": "Energiekosten",
+        "fr": "Coût d'énergie"
+      },
+      "args": [
+        {
+          "name": "energyCost",
+          "type": "number",
+          "placeholder": {
+            "en": "Energy Cost",
+            "nl": "Energiekosten",
+            "fr": "Coût d'énergie"
+          }
         }
       ]
     }

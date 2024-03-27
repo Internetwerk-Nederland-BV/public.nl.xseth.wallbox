@@ -126,9 +126,23 @@
         "title": {
           "en": "Status changed",
           "nl": "Status gewijzigd",
-          "fr": "statut à changé"
+          "fr": "Statut à changé"
         },
         "tokens": [
+          {
+            "name": "oldStatus",
+            "type": "string",
+            "title": {
+              "en": "Old Status",
+              "nl": "Oude Status",
+              "fr": "Ancien Statut"
+            },
+            "example": {
+              "en": "Waiting",
+              "nl": "Waiting",
+              "fr": "En attente"
+            }
+          },
           {
             "name": "status",
             "type": "string",
@@ -144,6 +158,111 @@
             }
           }
         ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "meter_power_changed",
+        "title": {
+          "en": "Total energy supplied changed",
+          "nl": "Totaal geleverde energie gewijzigd",
+          "fr": "Énergie totale fournie modifiée"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "meter_power_session_changed",
+        "title": {
+          "en": "Session energy supplied changed",
+          "nl": "Sessie energie geleverd gewijzigd",
+          "fr": "Énergie de Séance fournie modifié"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "measure_energy_cost_changed",
+        "title": {
+          "en": "Energy cost changed",
+          "nl": "Energiekosten gewijzigd",
+          "fr": "Coût d'énergie modifié"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "meter_session_cost_changed",
+        "title": {
+          "en": "Session cost changed",
+          "nl": "Sessiekosten gewijzigd",
+          "fr": "Coût de la Séance modifié"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "measure_maximum_charging_current_changed",
+        "title": {
+          "en": "Maximum charging current changed",
+          "nl": "Maximale laadstroom gewijzigd",
+          "fr": "Courant de charge maximum modifié"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "user_id_changed",
+        "title": {
+          "en": "UserID changed",
+          "nl": "UserID gewijzigd",
+          "fr": "ID de l'Utilisateur modifié"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          }
+        ]
+      },
+      {
+        "id": "user_name_changed",
+        "title": {
+          "en": "User name changed",
+          "nl": "Gebruikersnaam gewijzigd",
+          "fr": "Nom d'utilisateur modifié"
+        },
         "args": [
           {
             "type": "device",
@@ -185,21 +304,21 @@
         ]
       },
       {
-        "id": "change_ampere",
+        "id": "change_measure_maximum_charging_current",
         "title": {
-          "en": "Change charging current",
-          "nl": "Verander laadsnelheid",
-          "fr": "Modifier la vitesse de chargement"
+          "en": "Change measure maximum charging current",
+          "nl": "Verander meting maximale laadstroom",
+          "fr": "Modifier la mesure du courant de charge maximum"
         },
         "titleFormatted": {
-          "en": "Set charging to current: [[ampere]]",
-          "nl": "Stel laden in met ampere: [[ampere]]",
-          "fr": "Configurer la charge avec Ampère: [[ampere]]"
+          "en": "Set maximum charging current to: [[ampere]]A",
+          "nl": "Stel maximale laadstroom in op: [[ampere]]A",
+          "fr": "Réglez le courant de charge maximum sur: [[ampere]]A"
         },
         "hint": {
-          "en": "Change current",
-          "nl": "Verander laadsnelheid",
-          "fr": "Modifier la vitesse de chargement"
+          "en": "Change maximum charging current",
+          "nl": "Wijzig maximale laadstroom",
+          "fr": "Modifier le courant de charge maximum"
         },
         "args": [
           {
@@ -211,13 +330,47 @@
             "name": "ampere",
             "type": "number",
             "placeholder": {
-              "en": "Current",
-              "nl": "Ampere",
-              "fr": "Ampère"
+              "en": "Charging current",
+              "nl": "Laadstroom",
+              "fr": "Courant de charge"
             },
-            "min": 1,
+            "min": 6,
             "max": 32,
             "step": 1
+          }
+        ]
+      },
+      {
+        "id": "change_measure_energy_cost",
+        "title": {
+          "en": "Change measure energy cost",
+          "nl": "Wijzig meting energiekosten",
+          "fr": "Modifiér mesure du Coût d'énergie"
+        },
+        "titleFormatted": {
+          "en": "Set energy cost to: [[energyCost]]€/kWh",
+          "nl": "Stel energiekosten in op: [[energyCost]]€/kWh",
+          "fr": "Fixez le coût de l'énergie à: [[energyCost]]€/kWh"
+        },
+        "hint": {
+          "en": "Energy cost",
+          "nl": "Energiekosten",
+          "fr": "Coût d'énergie"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=wallbox"
+          },
+          {
+            "name": "energyCost",
+            "type": "number",
+            "placeholder": {
+              "en": "Energy Cost",
+              "nl": "Energiekosten",
+              "fr": "Coût d'énergie"
+            }
           }
         ]
       }
@@ -235,9 +388,15 @@
         "locked",
         "status",
         "onoff",
+        "measure_power",
+        "measure_maximum_charging_current",
+        "meter_power_session",
         "meter_power",
-        "measure_current",
-        "measure_power"
+        "user_id",
+        "user_name",
+        "maximum_available_current",
+        "measure_energy_cost",
+        "meter_session_cost"
       ],
       "images": {
         "xlarge": "/drivers/wallbox/assets/images/xlarge.png",
@@ -364,6 +523,23 @@
       "icon": "/assets/icon.svg",
       "insights": false
     },
+    "maximum_available_current": {
+      "type": "number",
+      "title": {
+        "en": "Maximum Available Current",
+        "nl": "Maximaal Beschikbare Stroom",
+        "fr": "Courant Maximum Disponible"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "A"
+      },
+      "min": 6,
+      "max": 32,
+      "icon": "/assets/measure_power.svg",
+      "insights": true
+    },
     "measure_current": {
       "type": "number",
       "title": {
@@ -381,19 +557,85 @@
       "icon": "/assets/icon.svg",
       "insights": true
     },
+    "measure_energy_cost": {
+      "type": "number",
+      "title": {
+        "en": "Energy Cost",
+        "nl": "Energiekosten",
+        "fr": "Coût d'Énergie"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "€/kWh"
+      },
+      "decimals": 2,
+      "icon": "/assets/euro.svg",
+      "insights": true
+    },
+    "measure_maximum_charging_current": {
+      "type": "number",
+      "title": {
+        "en": "Maximum Charging Current",
+        "nl": "Maximale Laadstroom",
+        "fr": "Courant de Charge Maximal"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "A"
+      },
+      "min": 6,
+      "max": 32,
+      "icon": "/assets/measure_power.svg",
+      "insights": true
+    },
     "meter_power": {
       "type": "number",
       "title": {
-        "en": "Power supplied in this session",
-        "nl": "Vermogen in deze laadsessie geleverd",
-        "fr": "Puissance fournie lors de cette session"
+        "en": "Total Energy Supplied",
+        "nl": "Totaal Geleverde Energie",
+        "fr": "Énergie Totale Fournie"
       },
       "getable": true,
       "setable": false,
       "units": {
         "en": "kWh"
       },
-      "icon": "/assets/icon.svg",
+      "decimals": 3,
+      "icon": "/assets/meter_power.svg",
+      "insights": true
+    },
+    "meter_power_session": {
+      "type": "number",
+      "title": {
+        "en": "Session Energy Supplied",
+        "nl": "Sessie Energie Geleverd",
+        "fr": "Énergie de Séance Fournie"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "kWh"
+      },
+      "decimals": 3,
+      "icon": "/assets/meter_power.svg",
+      "insights": true
+    },
+    "meter_session_cost": {
+      "type": "number",
+      "title": {
+        "en": "Session Cost",
+        "nl": "Sessiekosten",
+        "fr": "Coût de la Séance"
+      },
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "€"
+      },
+      "decimals": 2,
+      "icon": "/assets/euro.svg",
       "insights": true
     },
     "onoff": {
@@ -485,7 +727,7 @@
         {
           "id": "Paused",
           "title": {
-            "en": "Pauzed charging",
+            "en": "Paused charging",
             "nl": "Laden gepauzeerd",
             "fr": "Chargement en pause"
           }
@@ -498,6 +740,29 @@
       },
       "icon": "/assets/icon.svg",
       "insights": false
+    },
+    "user_id": {
+      "type": "string",
+      "title": {
+        "en": "UserID",
+        "nl": "UserID",
+        "fr": "ID de l'Utilisateur"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": null,
+      "icon": "/assets/user.svg"
+    },
+    "user_name": {
+      "type": "string",
+      "title": {
+        "en": "User Name",
+        "nl": "Gebruikersnaam",
+        "fr": "Nom d'Utilisateur"
+      },
+      "getable": true,
+      "setable": false,
+      "icon": "/assets/user.svg"
     }
   }
 }

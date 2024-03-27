@@ -17,8 +17,10 @@ class wallboxapp extends Homey.App {
 			.registerRunListener(args => args.device.turnOnOff(true));
 		this.homey.flow.getActionCard('pause_charging')
 			.registerRunListener(args => args.device.turnOnOff(false));
-		this.homey.flow.getActionCard('change_ampere')
+		this.homey.flow.getActionCard('change_measure_maximum_charging_current')
 			.registerRunListener(args => args.device.setMaxChargingCurrent(args.ampere));
+		this.homey.flow.getActionCard('change_measure_energy_cost')
+			.registerRunListener(args => args.device.setEnergyCost(args.energyCost));
 	}
 }
 

@@ -21,8 +21,33 @@ class wallbox_charger extends Homey.Device {
     this._api = new WallboxAPI(user, pass, this.homey);
 
     await this._api.authenticate();
+    await this.registerCapabilities();
     await this.registerCapabilityListeners();
     await this.setupDevicePollingAndDoFirstPoll();
+  }
+
+  async registerCapabilities() {
+    if (!this.hasCapability('meter_power_session')) {
+      await this.addCapability('meter_power_session');
+    }
+    if (!this.hasCapability('meter_session_cost')) {
+      await this.addCapability('meter_session_cost');
+    }
+    if (!this.hasCapability('maximum_available_current')) {
+      await this.addCapability('maximum_available_current');
+    }
+    if (!this.hasCapability('measure_maximum_charging_current')) {
+      await this.addCapability('measure_maximum_charging_current');
+    }
+    if (!this.hasCapability('user_id')) {
+      await this.addCapability('user_id');
+    }
+    if (!this.hasCapability('user_name')) {
+       await this.addCapability('user_name');
+    }
+    if (!this.hasCapability('measure_energy_cost')) {
+      await this.addCapability('measure_energy_cost');
+    }
   }
 
   async registerCapabilityListeners() {
@@ -71,7 +96,7 @@ class wallbox_charger extends Homey.Device {
 
   async checkDeviceAvailability(stats) {
     const newStatus = this.getChargerStatusName(stats);
-    if (newStatus == 'Disconnected' || newStatus == 'Error') {
+    if (newStatus === 'Disconnected' || newStatus === 'Error') {
       await this.setUnavailable();
       this.log(`Device ${this._name} is unavailable (disconnected/error)`)
       return
@@ -92,23 +117,37 @@ class wallbox_charger extends Homey.Device {
 
   async whenChangedSetCapabilities(stats) {
     let isLocked = Boolean(stats['config_data']['locked']);
-    const lockedStatus = this.getCapabilityValue('locked');
-    await this.whenChangedSetCapabilityValue(isLocked, lockedStatus);
+    await this.whenChangedSetCapabilityValue('locked', isLocked);
 
     const newStatus = this.getChargerStatusName(stats);
-    const isOnOff = newStatus != 'Paused';
-    const onOffStatus = this.getCapabilityValue('onoff');
-    await this.whenChangedSetCapabilityValue(isOnOff, onOffStatus);
+    const isOnOff = newStatus !== 'Paused';
+    await this.whenChangedSetCapabilityValue('onoff', isOnOff);
 
-    const chargingPowerInKW = stats['charging_power'];
-    const chargingPowerInW = chargingPowerInKW * 1000;
+    const maxAvailableCurrent = stats['config_data']['max_available_current'];
+    await this.whenChangedSetCapabilityValue('maximum_available_current', maxAvailableCurrent);
+
+    const chargingPowerInW = stats['charging_power'] * 1000;
     await this.whenChangedSetCapabilityValue('measure_power', chargingPowerInW);
 
-    const sessionEnergySupplied = stats['added_energy'];     
-    await this.whenChangedSetCapabilityValue('meter_power', sessionEnergySupplied);
+    const oldSessionEnergySupplied = this.getCapabilityValue('meter_power_session');
+    const sessionEnergySupplied = stats['added_energy'];
+    const energyCost = stats['config_data']['energy_price'];
+    await this.whenChangedSetTotalEnergy(sessionEnergySupplied, oldSessionEnergySupplied)
+    
+    await this.whenChangedSetSessionCost(sessionEnergySupplied, oldSessionEnergySupplied, energyCost);
+     
+    await this.whenChangedSetCapabilityValue('meter_power_session', sessionEnergySupplied);
+
+    await this.whenChangedSetCapabilityValue('measure_energy_cost', energyCost);
 
     const maxChargingCurrent = stats['config_data']['max_charging_current'];
-    await this.whenChangedSetCapabilityValue('measure_current', maxChargingCurrent);
+    await this.whenChangedSetCapabilityValue('measure_maximum_charging_current', maxChargingCurrent);
+    
+    const userId = stats['user_id'].toString();
+    await this.whenChangedSetCapabilityValue('user_id', userId);
+
+    const userName = stats['user_name'];
+    await this.whenChangedSetCapabilityValue('user_name', userName);
   }
 
   getChargerStatusName(stats) {
@@ -123,34 +162,69 @@ class wallbox_charger extends Homey.Device {
     }
   }
 
-  async triggerStatusChange(curStatus, newStatus){
+  async whenChangedSetTotalEnergy(currentSessionEnergySupplied, oldSessionEnergySupplied) {
+    let totalEnergy = await this.retrieveEnergyHistoricalTotal();
+    if(totalEnergy !== undefined) {
+      if (currentSessionEnergySupplied + totalEnergy !== oldSessionEnergySupplied + totalEnergy) {
+        await this.setCapabilityValue('meter_power', totalEnergy + currentSessionEnergySupplied);
+      }
+    }
+  }
+
+  async whenChangedSetSessionCost(currentSessionEnergySupplied, oldSessionEnergySupplied, energyCost) {
+    const oldSessionCost = this.getCapabilityValue('meter_session_cost');
+
+    if (currentSessionEnergySupplied < oldSessionEnergySupplied || currentSessionEnergySupplied === 0) {
+      sessionCost = currentSessionEnergySupplied * energyCost;
+    } else {
+      sessionCost = oldSessionCost + (currentSessionEnergySupplied - oldSessionEnergySupplied) * energyCost;
+    }
+
+    if (oldSessionCost !== sessionCost) {
+      await this.setCapabilityValue('meter_session_cost', sessionCost);
+    }
+  }
+
+  async retrieveEnergyHistoricalTotal() {
+    let sessions = await this._api.getSessionsList();
+    let totalEnergy = 0;
+    for (var session of sessions['data']) {
+      if (session['attributes']['charger'] === this._id && session['attributes']['energy'] !== undefined) {
+        totalEnergy += session['attributes']['energy'];
+      }
+    }
+    return totalEnergy;
+  }
+
+  async triggerStatusChange(oldStatus, newStatus){
     /**
      * Fire homey triggers for status change
      * 
-     * @param {String} curStatus - current Status
-     * @param {String} newStatus - new Status
+     * @param {String} oldStatus - previous Status before change
+     * @param {String} newStatus - current Status
      */
-    const tokens = {
+     const tokens = {
+      oldStatus: oldStatus,
       status: newStatus
     };
 
     this.driver.trigger('status_changed', this, tokens);
 
     // Ignore Error and Update triggers for now
-    if (newStatus == 'Error' || newStatus == 'Updating')
+    if (newStatus === 'Error' || newStatus === 'Updating')
       return;
 
     // Triggers based on change in previous status
-    if (curStatus == 'Charging')
+    if (oldStatus === 'Charging')
       this.driver.trigger('charging_ended', this);
-    else if (curStatus == 'Ready')
+    else if (oldStatus ==='Ready')
       this.driver.trigger('car_connected', this);
 
 
     // Triggers based on change in current status
-    if (newStatus == 'Charging')
+    if (newStatus === 'Charging')
       this.driver.trigger('charging_started', this);
-    else if (newStatus == 'Ready')
+    else if (newStatus ==='Ready')
       this.driver.trigger('car_unplugged', this);
 
   }
@@ -193,6 +267,15 @@ class wallbox_charger extends Homey.Device {
      * @param {int} amperage - ampere to set charging to
      */
     await this._api.setMaxChargingCurrent(this._id, amperage);
+  }
+  
+  async setEnergyCost(energyCost) {
+    /**
+     * Change energy cost value for charging session
+     *
+     * @param {float} energyCost - cost to set charging to
+     */
+    await this._api.setEnergyCost(this._id, energyCost);
   }
 }
 

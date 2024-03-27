@@ -13,7 +13,14 @@ class wallbox extends Homey.Driver {
       'charging_started',
       'car_connected',
       'car_unplugged',
-      'status_changed'
+      'status_changed',
+      'meter_power_changed',
+      'meter_power_session_changed',
+      'measure_maximum_charging_current_changed',
+      'measure_energy_cost_changed',
+      'meter_session_cost_changed',
+      'user_id_changed',
+      'user_name_changed'
     ]
     for (const type of this.trigger_keys) {
       this._triggers[type] = this.homey.flow.getDeviceTriggerCard(type)
