@@ -19,10 +19,18 @@ class wallbox_charger extends Homey.Device {
     this._name = this.getName();
     this._id = this.getData().id;
     this._api = new WallboxAPI(user, pass, this.homey);
-    
-    // Perform initial authentication
-    await this._api.authenticate();
 
+    await this._api.authenticate();
+    await this.registerCapabilityListeners();
+    await this.setupDevicePollingAndDoFirstPoll();
+  }
+
+  async registerCapabilityListeners() {
+    this.registerCapabilityListener('locked', this.turnLocked.bind(this));
+    this.registerCapabilityListener('onoff', this.turnOnOff.bind(this));
+  }
+
+  async setupDevicePollingAndDoFirstPoll() {
     // Verify default polling frequenty is set
     if (!this.getSetting('polling'))
       this.setSettings({ polling: POLL_INTERVAL});
@@ -30,11 +38,6 @@ class wallbox_charger extends Homey.Device {
     // Setup polling of device
     this.polling = this.homey.setInterval(this.poll.bind(this), 1000 * this.getSetting('polling'));
     await this.poll();
-
-    // Register capabilities
-    //this.addCapability('measure_power')
-    this.registerCapabilityListener('locked', this.turnLocked.bind(this));
-    this.registerCapabilityListener('onoff', this.turnOnOff.bind(this));
   }
 
   onDeleted() {
