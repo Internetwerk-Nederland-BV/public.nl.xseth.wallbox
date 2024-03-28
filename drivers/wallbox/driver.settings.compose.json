@@ -1,0 +1,38 @@
+[
+  {
+      "id": "polling",
+      "type": "number",
+      "label": {
+            "en": "Polling Interval (s)",
+            "nl": "Verversingsinterval (s)",
+            "fr": "Intervalle de Actualisation (s)"
+      },
+        "hint": {
+            "en": "This setting determines how often a poll occures to check for change in state",
+            "nl": "Deze instelling bepaalt hoe vaak er een peiling plaatsvindt om te controleren op statuswijzigingen",
+            "fr": "Ce paramètre détermine la fréquence à laquelle une interrogation est effectuée pour vérifier le changement d'état"
+      },
+      "value": 10,
+      "attr": {
+            "step": 1,
+            "min": 5,
+            "max": 600
+      }   
+  },
+  {
+      "id": "energy_cumulative_include",
+      "type": "checkbox",
+      "label": {
+            "en": "Include power in total consumption",
+            "nl": "Vermogen meenemen in totaal verbruik",
+            "fr": "Inclure la puissance dans la consommation totale"
+      },
+      "hint": {
+            "en": "Should the power of this device count towards the total Homey's energy usage?",
+            "nl": "Moet het energieverbruik van dit apparaat meetellen in het totaalverbruik van deze Homey?",
+            "fr": "La consommation énergétique de cet appareil doit-elle être incluse dans la consommation totale de ce Homey?"
+      },
+      "value": true  
+  }
+
+]

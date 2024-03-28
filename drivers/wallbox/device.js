@@ -7,7 +7,7 @@ const WallboxAPI = require('../../lib/wallbox_api');
 
 const statuses = status_util.statuses;
 
-const POLL_INTERVAL = 15;
+const POLL_INTERVAL = 10;
 
 class wallbox_charger extends Homey.Device {
 
@@ -85,6 +85,11 @@ class wallbox_charger extends Homey.Device {
   onDeleted() {
     this.log("deleting device...", this._name);
     this.homey.clearInterval(this.polling);
+  }
+
+  async onSettings({oldSettings, newSettings, changedKeys}) {
+    clearTimeout(this.polling);
+    this.polling = this.homey.setInterval(this.poll.bind(this), 1000 * newSettings.polling);
   }
 
   async poll() {
