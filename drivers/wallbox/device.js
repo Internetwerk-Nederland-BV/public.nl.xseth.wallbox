@@ -27,6 +27,8 @@ class wallbox_charger extends Homey.Device {
   }
 
   async registerCapabilities() {
+    await this.removeUnusedCapabilities();
+
     if (!this.hasCapability('meter_power_session')) {
       await this.addCapability('meter_power_session');
     }
@@ -47,6 +49,21 @@ class wallbox_charger extends Homey.Device {
     }
     if (!this.hasCapability('measure_energy_cost')) {
       await this.addCapability('measure_energy_cost');
+    }
+  }
+
+  async removeUnusedCapabilities() {
+    if (this.hasCapability('measure_current')) {
+      await this.removeCapability('measure_current');
+    }
+    if (this.hasCapability('charge_amp')) {
+      await this.removeCapability('charge_amp');
+    }
+    if (this.hasCapability('charge_amp_limit')) {
+      await this.removeCapability('charge_amp_limit');
+    }
+    if (this.hasCapability('charging')) {
+      await this.removeCapability('charging');
     }
   }
 
@@ -174,6 +191,7 @@ class wallbox_charger extends Homey.Device {
   async whenChangedSetSessionCost(currentSessionEnergySupplied, oldSessionEnergySupplied, energyCost) {
     const oldSessionCost = this.getCapabilityValue('meter_session_cost');
 
+    let sessionCost = 0;
     if (currentSessionEnergySupplied < oldSessionEnergySupplied || currentSessionEnergySupplied === 0) {
       sessionCost = currentSessionEnergySupplied * energyCost;
     } else {

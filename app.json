@@ -451,67 +451,7 @@
     }
   ],
   "capabilities": {
-    "charge_amp": {
-      "type": "number",
-      "title": {
-        "en": "Maximum power from source available for charging",
-        "nl": "Maximaal bronvermogen beschikbaar voor laden",
-        "fr": "Puissance maximale de la source disponible pour la charge"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "A"
-      },
-      "min": 6,
-      "max": 32,
-      "icon": "/assets/icon.svg",
-      "insights": true
-    },
-    "charge_amp_limit": {
-      "type": "number",
-      "title": {
-        "en": "Maximum power as set in the device's app",
-        "nl": "Maximaal vermogen zoals ingesteld in de app van het apparaat",
-        "fr": "Puissance maximale définie dans l'application"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "A"
-      },
-      "icon": "/assets/icon.svg",
-      "insights": true
-    },
-    "charging": {
-      "type": "boolean",
-      "title": {
-        "en": "Charging",
-        "nl": "Laden",
-        "fr": "Chargement"
-      },
-      "getable": true,
-      "setable": false,
-      "uiComponent": null,
-      "insights": false
-    },
-    "energy_total": {
-      "type": "number",
-      "title": {
-        "en": "Total Energy Supplied",
-        "nl": "Totaal geleverde energie",
-        "fr": "Énergie totale fournie"
-      },
-      "getable": true,
-      "setable": false,
-      "uiComponent": null,
-      "units": {
-        "en": "kWh"
-      },
-      "icon": "/assets/icon.svg",
-      "insights": true
-    },
-    "errr": {
+    "err": {
       "type": "boolean",
       "title": {
         "en": "Errorstatus",
@@ -538,23 +478,6 @@
       "min": 6,
       "max": 32,
       "icon": "/assets/measure_power.svg",
-      "insights": true
-    },
-    "measure_current": {
-      "type": "number",
-      "title": {
-        "en": "Current Amperage Supplied",
-        "nl": "Actueel amperage",
-        "fr": "Ampérage actuel fourni"
-      },
-      "getable": true,
-      "setable": false,
-      "units": {
-        "en": "A"
-      },
-      "min": 0,
-      "max": 100,
-      "icon": "/assets/icon.svg",
       "insights": true
     },
     "measure_energy_cost": {
