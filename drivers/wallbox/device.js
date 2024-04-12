@@ -240,16 +240,14 @@ class wallbox_charger extends Homey.Device {
     // Triggers based on change in previous status
     if (oldStatus === 'Charging')
       this.driver.trigger('charging_ended', this);
-    else if (oldStatus ==='Ready')
+    else if (oldStatus === 'Ready')
       this.driver.trigger('car_connected', this);
-
 
     // Triggers based on change in current status
     if (newStatus === 'Charging')
       this.driver.trigger('charging_started', this);
-    else if (newStatus ==='Ready')
+    else if (newStatus === 'Ready')
       this.driver.trigger('car_unplugged', this);
-
   }
 
   async turnLocked(value) {
